@@ -1,0 +1,11 @@
+bans.json
+config.json
+log.txt
+omp-server.exe
+omp-server.pdb
+/qawno
+/models
+/components
+/filterscripts
+/gamemodes/main.amx
+/scriptfiles/
