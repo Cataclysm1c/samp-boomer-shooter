@@ -1,11 +1,12 @@
 #include <YSI_Coding\y_hooks>
 
+#define MAX_HEALTH 200
 #define BODY_PART_LEFT_LEG 7
 #define BODY_PART_RIGHT_LEG 8
 #define BODY_PART_HEAD 9
 
-new static Float:g_playerHealth[MAX_PLAYERS] = {150.0, ...};
-new static Float:g_weaponDamages[] = 
+new static Float:g_PlayerHealth[MAX_PLAYERS] = {150.0, ...};
+new static Float:g_WeaponDamages[] = 
 {
 	0.0, // Fist
 	0.0, // Brass
@@ -78,8 +79,16 @@ PlayerKilledPlayer(playerid, killer, t_WEAPON:weaponid)
 
 ServerSetHealth(playerid, Float:health)
 {
-	g_playerHealth[playerid] = health;
+	g_PlayerHealth[playerid] = FloatClamp(health, 0.0, MAX_HEALTH);
 	SetPlayerHealth(playerid, health);
+}
+
+ServerGiveHealth(playerid, Float:health)
+{
+	new Float:newHealth = floatadd(g_PlayerHealth[playerid], health);
+
+	g_PlayerHealth[playerid] = FloatClamp(newHealth, 0.0, MAX_HEALTH);
+	SetPlayerHealth(playerid, g_PlayerHealth[playerid]);
 }
 
 bool:IsBulletWeapon(t_WEAPON:weaponid)
@@ -89,7 +98,7 @@ bool:IsBulletWeapon(t_WEAPON:weaponid)
 
 Float:ServerGetPlayerHealth(playerid)
 {
-	return g_playerHealth[playerid];
+	return g_PlayerHealth[playerid];
 }
 
 Float:CalculateShotgunDamage(Float:amount)
@@ -111,7 +120,7 @@ Float:GetWeaponDamage(t_WEAPON:weaponid, Float:amount)
 	}
 	else
 	{
-		calculatedAmount = g_weaponDamages[weaponid];
+		calculatedAmount = g_WeaponDamages[weaponid];
 	}
 
 	return calculatedAmount;
@@ -144,7 +153,7 @@ hook OnPlayerGiveDamage(playerid, damagedid, Float:amount, t_WEAPON:weaponid, bo
 		Float:damagedPlayerHealth = ServerGetPlayerHealth(damagedid),
 		Float:currentPlayerHealth = ServerGetPlayerHealth(playerid);
 
-	if (currentPlayerHealth <= 0.0 || damagedPlayerHealth <= 0.0)
+	if (currentPlayerHealth <= 0.0 || damagedPlayerHealth <= 0.0 || !DoesPlayerHaveWeapon(playerid, weaponid))
 	{
 		return 1;
 	}

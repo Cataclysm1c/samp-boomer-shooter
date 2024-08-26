@@ -3,6 +3,7 @@
 
 /* Modules */
 #include "utilities.pwn"
+#include "anticheat.pwn"
 #include "damage.pwn"
 #include "spawn.pwn"
 #include "player.pwn"

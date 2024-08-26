@@ -1,6 +1,8 @@
 #include <YSI_Coding\y_hooks>
 
-static Float:g_playerSpawnPoints[][4] =
+#define DEFAULT_HEALTH 150.0
+
+static Float:g_PlayerSpawnPoints[][4] =
 {
 	{-1425.2196, 81.6086, 1031.1018, 320.5571}, // sw
 	{-1425.4335, 131.3056, 1030.8605, 225.2384}, // nw
@@ -14,6 +16,7 @@ public LoginSpawnPlayer(playerid)
 	TogglePlayerSpectating(playerid, false);
 }
 
+/*
 GiveRandomWeapon(playerid)
 {
 	new t_WEAPON:randomWeapon = t_WEAPON:RandomRange(WEAPON_COLT45, WEAPON_SNIPER);
@@ -23,8 +26,9 @@ GiveRandomWeapon(playerid)
 		randomWeapon = WEAPON_SHOTGUN;
 	}
 
-	GivePlayerWeapon(playerid, t_WEAPON:randomWeapon, 9999);
+	GivePlayerServerWeapon(playerid, t_WEAPON:randomWeapon, 9999);
 }
+*/
 
 SetPlayerSkills(playerid)
 {
@@ -38,9 +42,9 @@ SetPlayerSpawn(playerid)
 	SetPlayerSkills(playerid);
 	SetPlayerInterior(playerid, 1);
 
-	new randomSpawnPoint = random((sizeof g_playerSpawnPoints) - 1);
-	SetPlayerPos(playerid, g_playerSpawnPoints[randomSpawnPoint][0], g_playerSpawnPoints[randomSpawnPoint][1], g_playerSpawnPoints[randomSpawnPoint][2]);
-	SetPlayerFacingAngle(playerid, g_playerSpawnPoints[randomSpawnPoint][3]);
+	new randomSpawnPoint = random((sizeof g_PlayerSpawnPoints) - 1);
+	SetPlayerPos(playerid, g_PlayerSpawnPoints[randomSpawnPoint][0], g_PlayerSpawnPoints[randomSpawnPoint][1], g_PlayerSpawnPoints[randomSpawnPoint][2]);
+	SetPlayerFacingAngle(playerid, g_PlayerSpawnPoints[randomSpawnPoint][3]);
 	SetCameraBehindPlayer(playerid);
 }
 
@@ -50,8 +54,9 @@ hook OnPlayerSpawn(playerid)
 	SetPlayerTeam(playerid, 1);
 	SetPlayerSpawn(playerid);
 
-	ServerSetHealth(playerid, 150);
-	GiveRandomWeapon(playerid);
+	ServerSetHealth(playerid, DEFAULT_HEALTH);
+	// GiveRandomWeapon(playerid);
+	GivePlayerServerWeapon(playerid, WEAPON_DEAGLE, 9999);
 }
 
 hook OnPlayerDeath(playerid)
